@@ -1,0 +1,16 @@
+
+ssh 公钥、私钥无密码登录
+
+
+1> 在源机 生成公钥、使用，root用户在 .ssh/  目录下生成文件 id_rsa,id_rsa.pub
+
+2> 修改目标机  /etc/ssh/sshd_config  配制文件
+
+PubkeyAuthentication yes
+PermitRootLogin yes
+
+3>  重启配置 ： service sshd restart
+
+4> 将id_rsa.pub 文件内容拷到目标机文件中：  ~/.ssh/authorized_keys
+
+5> 在源机使用  ssh root@目标机ip  ，不用输入密码
