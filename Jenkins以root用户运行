@@ -1,0 +1,21 @@
+以centOS系统为例，记录下修改Jenkins以root用户运行的方法。
+修改Jenkins配置文件
+
+# 打开配置文件
+vim /etc/sysconfig/jenkins
+# 修改$JENKINS_USER，并去掉当前行注释
+$JENKINS_USER="root"
+修改Jenkins相关文件夹用户权限
+
+chown -R root:root /var/lib/jenkins
+chown -R root:root /var/cache/jenkins
+chown -R root:root /var/log/jenkins
+重启Jenkins服务并检查运行Jenkins的用户是否已经切换为root
+
+# 重启Jenkins（若是其他方式安装的jenkins则重启方式略不同）
+service jenkins restart
+# 查看Jenkins进程所属用户
+
+ps -ef | grep jenkins
+
+# 若显示为root用户，则表示修改完成
