@@ -1,0 +1,19 @@
+
+<一> 下载
+   wget  jenkins 2.164.**.rpm
+   
+<二> 安装
+   rpm -ih jenkins 2.164.**.rpm
+
+<三> 启动
+    service jenkins start/stop/restart
+    chkconfig jenkins on
+<四>安装目录结构
+    
+    /usr/lib/jenkins/jenkins.war     WAR包 
+    /etc/sysconfig/jenkins       　　 配置文件
+    /var/lib/jenkins/        　　　　   默认的JENKINS_HOME目录
+    /var/log/jenkins/jenkins.log      Jenkins日志文件
+    
+    
+   
