@@ -1,5 +1,20 @@
-rpm -ivh elasticsearch-6.8.1.rpm
+1> download
+  wget https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-6.8.1.rpm
+  
+2> install  
+   rpm -ivh elasticsearch-6.8.1.rpm
+   
+3> config   
+   mkdir -p /data/elasticsearch/logs
+   chown -R elasticsearch.elasticsearch /data/elasticsearch
+   
+   vi /etc/elasticsearch/elasticsearch.yml
 
+   path.data: /data/elasticsearch
+   path.logs: /data/elasticsearch/logs
+   network.host: 0.0.0.0
+
+4> start 
 ### NOT starting on installation, please execute the following statements to configure elasticsearch service to start automatically using systemd
  sudo systemctl daemon-reload
  sudo systemctl enable elasticsearch.service
