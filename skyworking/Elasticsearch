@@ -1,0 +1,8 @@
+rpm -ivh elasticsearch-6.8.1.rpm
+
+### NOT starting on installation, please execute the following statements to configure elasticsearch service to start automatically using systemd
+ sudo systemctl daemon-reload
+ sudo systemctl enable elasticsearch.service
+### You can start elasticsearch service by executing
+ sudo systemctl start elasticsearch.service
+Created elasticsearch keystore in /etc/elasticsearch
