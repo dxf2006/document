@@ -1,4 +1,6 @@
 
+## redis 集群
+
 1. 启动各个节点
    cd ./redis_cluster
    redis-server  ./7000/redis.conf
