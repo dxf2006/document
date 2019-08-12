@@ -10,7 +10,7 @@ rocketmq 启动（2master-noslever）：
   2> 分别启动启动Broker
       nohup sh ./bin/mqbroker -c /usr/local/rocketmq/conf/2m-noslave/broker-a.properties >/dev/null 2>&1 &
 
-      nohup mqbroker -c /usr/local/rocketmq/conf/2m-noslave/broker-b.properties >/dev/null 2>&1 &
+      nohup sh ./bin/mqbroker -c /usr/local/rocketmq/conf/2m-noslave/broker-b.properties >/dev/null 2>&1 &
 
 
       检查：
