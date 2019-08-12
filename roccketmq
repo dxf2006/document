@@ -5,7 +5,7 @@ http://10.0.2.204:8050/#/
 rocketmq 启动（2master-noslever）：
 
   1> 分别启动两台机器的namesrv
-     nohub sh ./bin/mqnamesrv &
+     nohup sh ./bin/mqnamesrv &
 
   2> 分别启动启动Broker
       nohup sh ./bin/mqbroker -c /usr/local/rocketmq/conf/2m-noslave/broker-a.properties >/dev/null 2>&1 &
@@ -19,8 +19,8 @@ rocketmq 启动（2master-noslever）：
    3>停止：
        cd /usr/local/rocketmq
 
-       sh /bin/mqshutdown broker
+       sh ./bin/mqshutdown broker
         
-       sh bin/mqshutdown namesrv
+       sh ./bin/mqshutdown namesrv
        
        
