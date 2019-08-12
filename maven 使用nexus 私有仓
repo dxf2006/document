@@ -1,0 +1,37 @@
+1> 添加仓库定义
+    <profile>
+        <id>dev-vwzt</id>
+        <repositories>
+            <repository>
+                <id>local-nexus</id>
+                <url>http://10.0.2.21:8084/nexus/content/groups/public/</url>
+                <releases>
+                    <enabled>true</enabled>
+                    <updatePolicy>always</updatePolicy>
+                                              <checksumPolicy>warn</checksumPolicy>
+                </releases>
+                <snapshots>
+                    <enabled>true</enabled>
+                    <updatePolicy>always</updatePolicy>
+                                              <checksumPolicy>warn</checksumPolicy>
+                </snapshots>
+            </repository>
+        </repositories>
+        <pluginRepositories>
+          <pluginRepository>
+            <id>local-nexus</id>
+            <url>http://10.0.2.21:8084/nexus/content/groups/public/</url>
+            <releases> <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                  <enabled>true</enabled>
+            </snapshots>
+          </pluginRepository>
+        </pluginRepositories>
+    </profile>
+    
+2> 激活定义：
+
+    <activeProfiles>
+        <activeProfile>dev-vwzt</activeProfile>
+    </activeProfiles>
