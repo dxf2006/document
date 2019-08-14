@@ -8,6 +8,8 @@
    mkdir -p /data/elasticsearch/logs
    chown -R elasticsearch.elasticsearch /data/elasticsearch
    
+   chown -R elsearch:elsearch  /data/elasticsearch-node2
+   
    vi /etc/elasticsearch/elasticsearch.yml
 
    path.data: /data/elasticsearch
