@@ -1,0 +1,24 @@
+
+1> max file descriptors [4096] for elasticsearch process is too low, increase to at least [65536]
+   每个进程最大同时打开文件数太小，可通过下面2个命令查看当前数量
+   
+   修改/etc/security/limits.conf文件，增加配置，用户退出后重新登录生效
+   
+   *               soft    nofile          65536
+   *               hard    nofile          65536
+   
+   
+ 可通过下面2个命令查看当前数量:
+ 
+  ulimit -Hn
+  ulimit -Sn  
+  
+2> max virtual memory areas vm.max_map_count [65530] is too low, increase to at least [262144]
+
+　　修改/etc/sysctl.conf文件，增加配置vm.max_map_count=262144  
+    
+    vi /etc/sysctl.conf
+    执行命令 sysctl -p 生效
+    
+3> elasticsearch用户没有该文件夹的权限，执行命令
+   chown -R elsearch:elsearch /usr/local/elasticsearch/ 
