@@ -23,3 +23,8 @@
 ### You can start elasticsearch service by executing
  sudo systemctl start elasticsearch.service
 Created elasticsearch keystore in /etc/elasticsearch
+
+
+5>监控检查：
+
+  http://10.0.2.23:9201/_cat/health?v
