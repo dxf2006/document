@@ -14,3 +14,15 @@ PermitRootLogin yes
 4> 将id_rsa.pub 文件内容拷到目标机文件中：  ~/.ssh/authorized_keys
 
 5> 在源机使用  ssh root@目标机ip  ，不用输入密码
+
+
+___________________________________________________________________________
+常见问题
+
+1. A机器已经生产rsa密钥且已经将public key添加到B机器/root/.ssh/authorized_keys，但是从A机器上ssh root@B机器时仍然需要输入密码，即无密码认证失败。
+   
+  手工拷贝的公钥里面包含换行，导致公钥验证失败。
+
+  . 通过查看A 和 B 认证日志，找出认证失败原因.
+    cat /var/log/secure  
+     
