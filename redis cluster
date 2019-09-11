@@ -6,6 +6,9 @@
    redis-server  ./7000/redis.conf
    redis-server  ./7001/redis.conf
    
+   添加日志
+   redis-server  ./7000/redis.conf --logfile /opt/logs/redis/redis.log
+   
 2. 创建集群
    ./redis-trib.rb create --replicas 1 10.0.2.203:7000 10.0.2.203:7001 10.0.2.203:7002 10.0.2.204:7003 10.0.2.204:7004 10.0.2.204:7005
    
