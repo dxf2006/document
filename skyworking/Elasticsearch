@@ -28,3 +28,7 @@ Created elasticsearch keystore in /etc/elasticsearch
 5>监控检查：
 
   http://10.0.2.23:9201/_cat/health?v
+
+
+6> 切换用户启动，不能用root用户：
+   su elsearch
