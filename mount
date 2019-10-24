@@ -1,0 +1,3 @@
+
+mount -t nfs -o nolock,nfsvers=3,vers=3 -o proto=tcp 10.0.2.206:/usr/local/vwzt_data /usr/local/vwzt_data
+
