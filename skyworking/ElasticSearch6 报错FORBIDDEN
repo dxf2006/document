@@ -1,0 +1,8 @@
+ElasticSearch6 报错FORBIDDEN/12/index read-only / allow delete (api)
+
+官方解决方法：
+
+curl -XPUT -H "Content-Type: application/json" http://127.0.0.1:9200/_all/_settings -d '{"index.blocks.read_only_allow_delete": null}'
+_all 可以改为自己的索引名称，也可以直接执行
+
+curl -XPUT -H "Content-Type: application/json" http://127.0.0.1:9200/_all/_settings -d '{"index.blocks.read_only_allow_delete": null}'
