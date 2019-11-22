@@ -24,6 +24,9 @@
  sudo systemctl start elasticsearch.service
 Created elasticsearch keystore in /etc/elasticsearch
 
+ ./bin/elasticsearch -d
+ 
+ -d后台启动
 
 5>监控检查：
 
