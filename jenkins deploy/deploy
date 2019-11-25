@@ -1,0 +1,16 @@
+1>编译：
+    web: clean install -Dmaven.test.skip  deploy -pl vwzt-pub
+    app: clean package -Dmaven.test.skip
+3>发布：
+ 
+printf "Starting deploy 10.0.2.205 ... \n"
+
+#22 deploy
+scp  /var/lib/jenkins/workspace/vwzt-build/vwzt-ll-rep/vwzt-ll-rep-core/target/vwzt-ll-rep-core-1.0.0-SNAPSHOT.jar root@10.0.2.205:/usr/local/vwzt_relase/vwzt-ll-rep
+BUILD_ID=dontKillMe ssh root@10.0.2.205 "/usr/local/vwzt/vwzt-ll-rep/jenkins-deploy.sh"
+
+printf "Starting sleep 120 secound ... \n"
+sleep 120
+
+
+
