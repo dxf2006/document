@@ -1,7 +1,9 @@
 1>编译：
     web: clean install -Dmaven.test.skip  deploy -pl vwzt-pub
     app: clean package -Dmaven.test.skip
-3>发布：
+    
+    
+2>发布：
  
 printf "Starting deploy 10.0.2.205 ... \n"
 
