@@ -24,3 +24,14 @@ rocketmq 启动（2master-noslever）：
        sh ./bin/mqshutdown namesrv
        
        
+
+
+
+<二> 操作
+  <1>查看集群
+     sh mqadmin clusterList -n 10.0.2.204:9876
+  <2>删除topic
+     ./mqadmin deleteTopic -c DefaultCluster -t REP_DOWNLOAD_TOPIC
+     
+  <3>查看topic列表信息
+    sh mqadmin topicList -n 10.0.2.203:9876;10.0.2.204:9876
