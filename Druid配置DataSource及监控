@@ -1,0 +1,54 @@
+Druid配置DataSource及监控
+
+<一> 添加依赖库：
+  <dependency>
+      <groupId>com.alibaba</groupId>
+      <artifactId>druid-spring-boot-starter</artifactId>
+      <version>1.1.17</version>
+  </dependency>
+
+<二> 配置中心添加配置：
+# 连接池初始化大小
+spring.datasource.druid.initial-size = 3
+spring.datasource.druid.minIdle = 3
+spring.datasource.druid.maxActive = 20
+# 配置获取连接等待超时的时间
+spring.datasource.druid.maxWait = 60000
+# 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
+spring.datasource.druid.timeBetweenEvictionRunsMillis = 60000
+# 配置一个连接在池中最小生存的时间，单位是毫秒
+spring.datasource.druid.minEvictableIdleTimeMillis = 300000
+spring.datasource.druid.validationQuery = SELECT 1 FROM DUAL
+spring.datasource.druid.testWhileIdle = true
+spring.datasource.druid.testOnBorrow = false
+spring.datasource.druid.testOnReturn = false
+# 配置监控统计拦截的filters
+spring.datasource.druid.filters = stat,wall
+# 通过connectProperties属性来打开mergeSql功能；慢SQL记录
+spring.datasource.druid.connectionProperties = druid.stat.mergeSql=true;druid.stat.slowSqlMillis=10000
+
+#开启监控
+spring.datasource.druid.stat-view-servlet.enabled = true
+spring.datasource.druid.stat-view-servlet.url-pattern = /druid/*
+spring.datasource.druid.stat-view-servlet.reset-enable = false
+spring.datasource.druid.stat-view-servlet.login-username = XXXXX
+spring.datasource.druid.stat-view-servlet.login-password = XXXXX
+spring.datasource.druid.stat-view-servlet.allow = *
+
+spring.datasource.druid.web-stat-filter.enabled = true
+spring.datasource.druid.web-stat-filter.url-pattern = *
+spring.datasource.druid.web-stat-filter.exclusions = *.js,*.gif,*.jpg,*.png,*.css,*.ico,/druid/*
+
+<三> 配置中心添加监控访问url权限排除：
+ignore.urls[4] = /druid/** 
+
+
+<四> 访问监控页面:  http://ip:服务端口/druid/index.html
+登录用户名、密码： admin/ admin
+可以从上面配置更改用户名密码：
+spring.datasource.druid.stat-view-servlet.login-username = XXXXX
+spring.datasource.druid.stat-view-servlet.login-password = XXXXX
+
+
+
+
