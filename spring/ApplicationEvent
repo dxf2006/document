@@ -1,0 +1,25 @@
+
+
+1>  实现监听接口
+   public class EmailNotifier implements ApplicationListener {
+      //该方法会在容器发生事件时自动触发
+      @Override
+      public void onApplicationEvent(ApplicationEvent evt) {
+      }
+   }  
+   
+2> 自定义事件
+    public class EmailEvent extends ApplicationEvent {
+        private String address;
+        private String text;
+        
+        public EmailEvent(Object source) {
+            super(source);
+        }
+    }
+    
+3>  发送事件
+        EmailEvent emailEvent = new EmailEvent("test");
+        emailEvent.setAddress("abc");
+        emailEvent.setText("eve name");
+        AppSpringContext.getApplicationContext().publishEvent(emailEvent);
