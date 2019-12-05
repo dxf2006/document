@@ -1,0 +1,9 @@
+1> 添加命名空间
+           xmlns:task="http://www.springframework.org/schema/task"
+           http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.1.xsd
+           
+2> 添加注解扫描
+     <task:annotation-driven/>
+3> 配置注解
+   @Scheduled(fixedDelay = 40000, initialDelay=60000)
+           
