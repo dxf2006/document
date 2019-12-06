@@ -1,0 +1,44 @@
+@Configuration与@Bean结合使用。@Configuration可理解为用spring的时候xml里面的<beans>标签，
+@Bean可理解为用spring的时候xml里面的<bean>标签。Spring Boot不是spring的加强版，所以@Configuration和@Bean同样可以用在普通的spring项目中，
+而不是Spring Boot特有的，只是在spring用的时候，注意加上扫包配置。
+
+Bean注解的作用之一就是能够管理第三方jar包内的类到容器中。 现在我们引入一个第三方的jar包，这其中的某个类，StringUtil需要注入
+到我们的IndexService类中，因为我们没有源码，不能再StringUtil中增加@Component或者@Service注解。这时候我们可以通过使用@Bean的方式，
+把这个类交到Spring容器进行管理，最终就能够被注入到IndexService实例中。
+在@Configuration中被@Bean标记的方法，会被Spring进行CGLIB代理，从而进行增强。来看一下Spring中的相关源代码实现。
+
+
+@SpringBootApplication注解相当于使用@Configuration、@EnableAutoConfiguration和@ComponentScan的默认属性@ComponentScan默认为
+当前包与其子包。SpringBoot中的Spring容器在启动的时候，会扫描当前包与子包中所有实现@Component注解或者其子类
+如@Configuration(找个本质上还是@Component)标记的类，认为这些类是bean, 并且把这些bean对应的beanDefinition放到容器中进行管理。
+BeanDefinition是对bean的描述，里边存有bean的名称，Class等基本信息。
+
+在获取到所有的bean defenition之后，Spring会有一些post process执行，其中一个就是ConfigurationClassPostProcessor，
+在这里，Spring会遍历所有的bean definition， 如果发现其中有标记了@Configuration注解的，会对这个类进行CGLIB代码，生成一个代理的类，
+并且把这个类设置到BeanDefenition的Class属性中。当需要拿到这个bean的实例的时候，会从这个class属性中拿到的Class对象进行反射，
+那么最终反射出来的是代理增强后的类。
+
+代理中对方法进行了增强？在哪方面进行了增强？对于@Bean标记的方法，返回的都是一个bean，在增强的方法中，
+Spring会先去容器中查看一下是否有这个bean的实例了，如果有了的话，就返回已有对象，没有的话就创建一个，然后放到容器中。以下边的代码为例。
+
+
+
+在执行getBean(IndexService.class)对应的bean的时候，会调用indexService()方法，而因为现在我们是在CGLIB增强的类中
+，indexService()方法已经被增强，Spring会先查看Spring容器中有没有实例，此时还没有，就new一个IndexService实例放到容器中。
+
+在执行getBean(OrderService.class)的时候，会调用orderService()方法，这里会调用indexService()方法，因为现在是在增强的类中，
+所以此处调用的也是增强的indexService()方法，会先去容器中查看有没有实例。现在已经有实例了，就会直接返回这个实例，不再新创建。
+
+@Bean注解可以对第三方的某些托管给Spring容器的工具类进行定制化。在传统配置文件方式的时候，我们需要定制某个bean的属性，我们会使用
+这些bean，既可以是我们的实体类，也可以是某些工具类的配置文件对应的类。比如说RestTemplate.在我们获取RestTemplate对应的实例的时候，
+初始化这个实例的时候，会在容器中寻找配置文件对应的类，如果有的话则注入到这个类中。那么RestTemplate实例对应的各种参数，
+比如说timeout时间长度等，就全部定制好了。使用@Bean注解，同样也是达到这种目的。不过这个是在扫描的时候把bean放入到容器中，
+而不是读取配置文件。前提是RestTemplate内部定义了这种兼容性的设计，即内部有地方接收这些注入的参数，并且把这些参数合理转化到相应的属性中。
+
+
+————————————————
+版权声明：本文为CSDN博主「孙大诚_SunRobin」的原创文章，遵循 CC 4.0 BY-SA 版权协议，转载请附上原文出处链接及本声明。
+原文链接：https://blog.csdn.net/sundacheng1989/article/details/92783515
+
+
+
