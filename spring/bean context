@@ -1,0 +1,9 @@
+<一> bean 添加到容器的方式：
+
+1> ComponentScan + 组件注解 (@Controller, @Service, @Component, @Resource @Repository)
+2> @Configuration + @Bean (一般对第三方组件)
+3> @Import
+4> @ImportSelector
+5> @ImportBeanDefinitionRegistrar
+
+<二>
