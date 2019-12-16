@@ -6,4 +6,9 @@
 4> @ImportSelector
 5> @ImportBeanDefinitionRegistrar
 
-<二>
+<二> bean 生命周期, 默认单例， 启动时创建 
+  @Scope     (single, property, request, session) 
+  @Lazy   指定第一次使用时创建
+  
+<三> 指定条件的bean添加到容器
+   @Conditional
