@@ -6,6 +6,7 @@ rocketmq 启动（2master-noslever）：
 
   1> 分别启动两台机器的namesrv
      nohup sh ./bin/mqnamesrv &
+     nohup sh ./bin/mqnamesrv -c /usr/local/rocketmq/conf/namesrv.properties &
 
   2> 分别启动启动Broker
       nohup sh ./bin/mqbroker -c /usr/local/rocketmq/conf/2m-noslave/broker-a.properties >/dev/null 2>&1 &
