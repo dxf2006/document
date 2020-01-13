@@ -1,0 +1,16 @@
+a. 开启 binlog：
+
+log_bin=mysql_bin
+binlog_format=row
+server_id=2 //设置大于1的整数
+binlog_row_image=full //当自建MySQL的版本大于5.6时，则必须设置该项。
+
+b. 修改完成后，重启MySQL进程
+   1、使用 service 启动：
+      service mysqld restart 
+      
+   2、使用 mysqld 脚本启动：
+      /etc/init.d/mysqld restart   
+
+c. 运行sql   show variables like 'log_bin';
+   如果Value 为 OFF 则未开启日志文件
