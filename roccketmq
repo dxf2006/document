@@ -13,7 +13,8 @@ rocketmq 启动（2master-noslever）：
 
       nohup sh ./bin/mqbroker -c /usr/local/rocketmq/conf/2m-noslave/broker-b.properties >/dev/null 2>&1 &
 
-
+      指定nameserv:
+           nohup sh ./bin/mqbroker -n 10.0.2.22:9876  autoCreateTopicEnable=true &
       检查：
            ./bin/mqadmin clusterList -n 10.0.2.203:9876
 
