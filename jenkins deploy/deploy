@@ -14,5 +14,25 @@ BUILD_ID=dontKillMe ssh root@10.0.2.205 "/usr/local/vwzt/vwzt-ll-rep/jenkins-dep
 printf "Starting sleep 120 secound ... \n"
 sleep 120
 
+#240 deploy
+printf "starting deploy 127.0.0.1 ... \n"
+
+scp  /var/lib/jenkins/workspace/vwzt-base-cloud-build/vwzt-admin/vwzt-admin-core/target/vwzt-admin-core-1.0.0-SNAPSHOT.jar root@127.0.0.1:/usr/local/vwzt_relase/vwzt-admin
+BUILD_ID=dontKillMe ssh root@127.0.0.1 "/usr/local/vwzt/vwzt-admin/jenkins-deploy.sh"
+
+printf "Starting sleep 120 secound ... \n"
+
+
+3>vue 前端
+
+printf "Starting install ... \n"
+npm install
+
+npm run build
+printf "Starting 127.0.01 deploy ... \n"
+
+rsync -avr --delete /var/lib/jenkins/workspace/vwzt-web-vwgt-deploy/dist/* root@10.110.150.200:/usr/local/vwzt/vwzt-web/tomcat/webapps/ROOT/
+
+sleep 30
 
 
