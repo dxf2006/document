@@ -1,0 +1,5 @@
+
+1》crontab -e 添加一下执行计划
+
+
+10 8 * * * /usr/local/elasticsearch-6/tools/del-20.sh > /data/del.log
