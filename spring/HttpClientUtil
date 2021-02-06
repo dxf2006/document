@@ -1,0 +1,265 @@
+
+
+import java.net.URI;
+import java.net.URL;
+import java.net.URLEncoder;
+import java.security.KeyManagementException;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import javax.net.ssl.SSLContext;
+
+import com.vanward.vwzt.o2o.order.core.utils.jd.JDSignUtil;
+import org.apache.http.Header;
+import org.apache.http.HttpEntity;
+import org.apache.http.NameValuePair;
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.CredentialsProvider;
+import org.apache.http.client.config.RequestConfig;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.config.Registry;
+import org.apache.http.config.RegistryBuilder;
+import org.apache.http.conn.socket.ConnectionSocketFactory;
+import org.apache.http.conn.socket.LayeredConnectionSocketFactory;
+import org.apache.http.conn.socket.PlainConnectionSocketFactory;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.conn.ssl.SSLContexts;
+import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
+import org.apache.http.conn.ssl.TrustStrategy;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.BasicCredentialsProvider;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.protocol.BasicHttpContext;
+import org.apache.http.protocol.HttpContext;
+import org.apache.http.util.EntityUtils;
+
+
+/**
+ * Desc:
+ * @author rongmin
+ * create at 2014-10-22
+ */
+public class HttpClientUtil {
+
+/*	public static void main(String ar[]) throws Exception {
+		System.err.println(HttpClientUtil.getMethod("http://baidu.com"));
+	}*/
+    
+    
+    
+    private static CloseableHttpClient HTTP_CLIENT = null;
+    
+    private static final int SOCKET_TIMEOUT = 80000;//读取超时
+    
+    private static final int CONNECT_TIMEOUT = 60000;//请求超时
+    
+    private static final int REQ_CONNECT_TIMEOUT = 60000;//从连接池去请求获取连接超时
+    
+    
+    
+    private static RequestConfig requestConfig = null;
+    
+    static {
+        
+        
+        RegistryBuilder<ConnectionSocketFactory> registryBuilder = RegistryBuilder.<ConnectionSocketFactory>create();
+        ConnectionSocketFactory plainSF = new PlainConnectionSocketFactory();
+        registryBuilder.register("http", plainSF);
+        //指定信任密钥存储对象和连接套接字工厂
+        try {
+            KeyStore trustStore = KeyStore.getInstance(KeyStore.getDefaultType());
+            SSLContext sslContext = SSLContexts.custom().useTLS().loadTrustMaterial(null, new TrustStrategy() {
+                public boolean isTrusted(
+                        java.security.cert.X509Certificate[] chain,
+                        String authType)
+                        throws java.security.cert.CertificateException {
+                    //信任所有
+                    return true;
+                }
+                
+            }).build();
+            LayeredConnectionSocketFactory sslSF = new SSLConnectionSocketFactory(sslContext, SSLConnectionSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
+            registryBuilder.register("https", sslSF);
+        } catch (KeyStoreException e) {
+            throw new RuntimeException(e);
+        } catch (KeyManagementException e) {
+            throw new RuntimeException(e);
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
+        Registry<ConnectionSocketFactory> registry = registryBuilder.build();
+        
+        
+        
+        
+        
+        requestConfig = RequestConfig.custom()
+                .setSocketTimeout(SOCKET_TIMEOUT)
+                .setConnectTimeout(CONNECT_TIMEOUT)
+                .setConnectionRequestTimeout(REQ_CONNECT_TIMEOUT)
+                .build();
+        PoolingHttpClientConnectionManager connManager = new PoolingHttpClientConnectionManager(registry);
+        // 将最大连接数增加到200
+        connManager.setMaxTotal(200);
+        // 将每个路由基础的连接增加到20
+        /**maxConnectionsPerHost ：最大连接数，默认是 2 。
+         maxTotalConnections ：最大活动连接数，默认是 20 。
+         增加配置后，不会报 等等timeout异常了*/
+        connManager.setDefaultMaxPerRoute(20);
+        
+        /* http authentication setting */
+		/*HttpHost target = new HttpHost("localhost", 80, "http");
+		CredentialsProvider credsProvider = new BasicCredentialsProvider();
+		credsProvider.setCredentials(
+                new AuthScope(target.getHostName(), target.getPort()),
+                new UsernamePasswordCredentials("username", "password"));*/
+        CredentialsProvider credsProvider = new BasicCredentialsProvider();
+        credsProvider.setCredentials(
+                new AuthScope(AuthScope.ANY_HOST, AuthScope.ANY_PORT),
+                new UsernamePasswordCredentials("xxxx", "xxx123333"));
+        
+        
+        HTTP_CLIENT = HttpClients.custom()
+                .setConnectionManager(connManager)
+                .setDefaultCredentialsProvider(credsProvider)//http authentication setting
+                .build();
+        ////HttpParams httpParams = HTTP_CLIENT.getParams();
+        ///HTTP_CLIENT.getParams().setParameter(CoreProtocolPNames.PROTOCOL_VERSION, HttpVersion.HTTP_1_1);
+        ///HTTP_CLIENT.getParams().setParameter(CoreProtocolPNames.HTTP_CONTENT_CHARSET, "UTF-8");
+        
+        //to destory
+        //////HTTP_CLIENT.close();
+    }
+    
+    public static String getMethod(String url) throws Exception  {
+        HttpGet httpget = new HttpGet(url);
+        httpget.setConfig(requestConfig);
+        HttpContext httpContext = new BasicHttpContext();
+        CloseableHttpResponse response = null;
+        try {
+            response = HTTP_CLIENT.execute(httpget, httpContext);
+            HttpEntity entity = response.getEntity();
+            if (entity != null) {
+                return EntityUtils.toString(entity, "UTF-8");
+            }
+            return null;
+        } finally {
+            if (response != null) {
+                response.close();
+            }
+        }
+    }
+    
+    public static String getMethod(String strUrl,Map<String,String> params) throws Exception  {
+        if(!ValidateUtil.isEmpty(params)){
+            StringBuffer sb = new StringBuffer();
+            sb.append(strUrl);
+            sb.append("?");
+            for(Map.Entry<String,String> item:params.entrySet()){
+                sb.append(item.getKey());
+                sb.append("=");
+                sb.append(item.getValue());
+                sb.append("&");
+            }
+            sb.deleteCharAt(sb.length()-1);
+            strUrl = sb.toString();
+        }
+        URL url = new URL(strUrl);
+        URI uri = new URI(url.getProtocol(), url.getHost()+":"+url.getPort(), url.getPath(), url.getQuery(), null);
+        HttpGet httpget = new HttpGet(uri);
+        httpget.setConfig(requestConfig);
+        HttpContext httpContext = new BasicHttpContext();
+        CloseableHttpResponse response = null;
+        try {
+            response = HTTP_CLIENT.execute(httpget, httpContext);
+            HttpEntity entity = response.getEntity();
+            if (entity != null) {
+                return EntityUtils.toString(entity, "UTF-8");
+            }
+            return null;
+        } finally {
+            if (response != null) {
+                response.close();
+            }
+        }
+    }
+    
+    public static String postMethod(String url, List<NameValuePair> data) throws Exception {
+        HttpPost httpost = new HttpPost(url);
+        httpost.setConfig(requestConfig);
+        httpost.setEntity(new UrlEncodedFormEntity(data, "UTF-8"));
+        HttpContext httpContext = new BasicHttpContext();
+        CloseableHttpResponse response = null;
+        try {
+            response = HTTP_CLIENT.execute(httpost, httpContext);
+            HttpEntity entity = response.getEntity();
+            if (entity != null) {
+                return EntityUtils.toString(entity, "UTF-8");
+            }
+            return null;
+        } finally {
+            if (response != null) {
+                response.close();
+            }
+        }
+    }
+    
+    public static String postMethod(String url, String data) throws Exception {
+        HttpPost httpost = new HttpPost(url);
+        httpost.setConfig(requestConfig);
+        StringEntity stren = new StringEntity(data);
+        stren.setContentType("application/json");
+        httpost.setEntity(stren);
+        
+        HttpContext httpContext = new BasicHttpContext();
+        CloseableHttpResponse response = null;
+        try {
+            response = HTTP_CLIENT.execute(httpost, httpContext);
+            HttpEntity entity = response.getEntity();
+            if (entity != null) {
+                return EntityUtils.toString(entity, "UTF-8");
+            }
+            return null;
+        } finally {
+            if (response != null) {
+                response.close();
+            }
+        }
+    }
+    
+    public static String postMethod(String url, String id, String data) throws Exception {
+        List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>();
+        NameValuePair nameValuePairId = new BasicNameValuePair("Id", id);
+        nameValuePairList.add(nameValuePairId);
+        NameValuePair nameValuePair = new BasicNameValuePair("Data", data);
+        nameValuePairList.add(nameValuePair);
+        return postMethod(url, nameValuePairList);
+    }
+    
+    
+    
+    public static String postMethod(String url, Map<String,String> map) throws Exception {
+        List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>();
+        NameValuePair nameValuePairId;
+        
+        for(String key : map.keySet()){
+            nameValuePairId = new BasicNameValuePair(key, map.get(key).toString());
+            nameValuePairList.add(nameValuePairId);
+        }
+        
+        return postMethod(url, nameValuePairList);
+    }
+    
+}
