@@ -1,0 +1,44 @@
+1>
+http.cors.enabled: true
+http.cors.allow-origin: "*"
+
+network.host: 0.0.0.0
+cluster.name: skyworking-es
+
+node.name: node-1
+node.master: true
+node.data: true
+
+http.port: 9000
+transport.tcp.port: 9003
+discovery.zen.ping_timeout: 120s
+client.transport.ping_timeout: 60s
+
+discovery.zen.ping.unicast.hosts: ["0.0.0.0:9300","0.0.0.0:9301"]
+#discovery.zen.ping.unicast.hosts: ["0.0.0.0:9003"]
+discovery.zen.minimum_master_nodes: 2
+path.data: /data/elasticsearch-6/node1/
+path.logs: /data/elasticsearch-6/node1/logs
+
+
+
+2>
+http.cors.enabled: true
+http.cors.allow-origin: "*"
+
+network.host: 0.0.0.0
+cluster.name: skyworking-es
+
+node.name: node-2
+node.master: true
+node.data: true
+
+http.port: 9001
+transport.tcp.port: 9004
+discovery.zen.ping_timeout: 120s
+client.transport.ping_timeout: 60s
+
+discovery.zen.ping.unicast.hosts: ["0.0.0.0:9003","0.0.0.0:9004"]
+discovery.zen.minimum_master_nodes: 2
+path.data: /data/elasticsearch-6/node2/
+path.logs: /data/elasticsearch-6/node2/logs
