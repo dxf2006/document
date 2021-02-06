@@ -1,0 +1,10 @@
+
+#!/bin/bash
+
+su elsearch
+
+cd /usr/local/elasticsearch-6/elasticsearch-1
+./bin/elasticsearch -d
+
+cd /usr/local/elasticsearch-6/elasticsearch-2
+./bin/elasticsearch -d
