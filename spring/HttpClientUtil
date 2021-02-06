@@ -46,11 +46,6 @@ import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
 
 
-/**
- * Desc:
- * @author rongmin
- * create at 2014-10-22
- */
 public class HttpClientUtil {
 
 /*	public static void main(String ar[]) throws Exception {
